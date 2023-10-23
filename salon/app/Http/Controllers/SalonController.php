@@ -19,12 +19,26 @@ class SalonController extends Controller
     public function store(Request $request)
     {
 
-        Salon::create($request->all());
+        sleep(1);
+
+        $validatedData = $request->validate([
+            'name' => 'required|min:3|max:255',
+            'address' => 'required|min:3|max:255',
+            'phone' => 'required|min:3|max:20',
+        ], 
+        [
+            'name.required' => 'Tu pamiršai įvesti pavadinimą',
+            'name.min' => 'Pavadinimas turi būti bent 3 simboliai',
+        ]);
+
+        $id = Salon::create($validatedData)->id;
 
         return response()->json([
-            'message' => 'Salon created successfully'
+            'message' => 'Salon created successfully',
+            'id' => $id
         ], 201);
         
+       
     }
 
     public function list()
